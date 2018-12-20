@@ -13,7 +13,6 @@
 <script>
 import { Navbar, Sidebar, AppMain, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
-import Launch from '@/views/Launch'
 
 export default {
   name: 'Layout',
@@ -42,41 +41,10 @@ export default {
   },
   mounted() {
     console.log('layout mounted')
-    this.getMenuList()
   },
   methods: {
     handleClickOutside() {
       this.$store.dispatch('closeSideBar', { withoutAnimation: false })
-    },
-    getMenuList() {
-      const menuList = [
-        {
-          path: 'Admin/Config/index',
-          component: Launch,
-          name: 'Admin/Config/index',
-          // redirect: "/documentation/index",
-          meta: {
-            title: '我的面板',
-            icon: 'documentation',
-            noCache: true
-          },
-          children: [
-            {
-              path: 'Admin/Adminmanage/myinfo',
-              component: Launch,
-              name: '修改个人信息',
-              meta: {
-                title: '修改个人信息',
-                icon: 'documentation',
-                noCache: true
-              }
-            }
-          ]
-        }
-      ]
-
-      console.log('menuList', menuList)
-      this.$router.addRoutes(menuList)
     }
   }
 }

@@ -5,6 +5,7 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '@/views/layout/Layout'
+import Lanuch from '@/views/launch'
 
 /* Router Modules */
 import componentsRouter from './modules/components'
@@ -33,7 +34,7 @@ import nestedRouter from './modules/nested'
 export const constantRouterMap = [
   {
     path: '',
-    component: Layout
+    component: Lanuch
     // redirect: 'dashboard',
     // children: [
     //   {
@@ -43,7 +44,31 @@ export const constantRouterMap = [
     //     meta: { title: 'dashboard', icon: 'dashboard', noCache: true }
     //   }
     // ]
-  }
+  },
+  {
+    path: '/redirect',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '/redirect/:path*',
+        component: () => import('@/views/redirect/index')
+      }
+    ]
+  },
+  {
+    path: '/',
+    component: Lanuch
+    // redirect: 'dashboard',
+    // children: [
+    //   {
+    //     path: 'dashboard',
+    //     component: () => import('@/views/dashboard/index'),
+    //     name: 'Dashboard',
+    //     meta: { title: 'dashboard', icon: 'dashboard', noCache: true }
+    //   }
+    // ]
+  },
   // {
   //   path: '/documentation',
   //   component: Layout,
@@ -57,6 +82,12 @@ export const constantRouterMap = [
   //     }
   //   ]
   // },
+
+  {
+    path: '/login',
+    component: () => import('@/views/login/index'),
+    hidden: true
+  }
 
 ]
 

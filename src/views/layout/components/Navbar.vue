@@ -2,7 +2,7 @@
   <div class="navbar">
     <hamburger :toggle-click="toggleSideBar" :is-active="sidebar.opened" class="hamburger-container"/>
 
-    <breadcrumb class="breadcrumb-container"/>
+    <span>XX管理系统</span>
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">

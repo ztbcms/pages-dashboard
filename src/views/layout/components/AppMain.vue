@@ -2,7 +2,7 @@
   <section class="app-main">
     <!-- <iframe :src="currentRouter" style="width: 100%;height: 100%;"></iframe> -->
     <template v-for="view in visitedViews">
-      <iframe :class="{'hidden': view.name != currentRouter}" :key="view.name" :src="'http://baidu.com/s?wd='+view.fullPath" class="iframe"/>
+      <iframe :class="{'hidden': view.name != currentRouter}" :key="view.name" :src="view.meta.url" class="iframe"/>
     </template>
   </section>
 </template>
@@ -45,9 +45,10 @@ export default {
   display: none;
 }
 .iframe{
-      width: 100%;
+    width: 100%;
     position: absolute;
     height: 100%;
+    border: 0;
 }
 </style>
 
