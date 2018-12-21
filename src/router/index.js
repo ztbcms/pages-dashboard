@@ -59,29 +59,12 @@ export const constantRouterMap = [
   {
     path: '/',
     component: Lanuch
-    // redirect: 'dashboard',
-    // children: [
-    //   {
-    //     path: 'dashboard',
-    //     component: () => import('@/views/dashboard/index'),
-    //     name: 'Dashboard',
-    //     meta: { title: 'dashboard', icon: 'dashboard', noCache: true }
-    //   }
-    // ]
   },
-  // {
-  //   path: '/documentation',
-  //   component: Layout,
-  //   redirect: '/documentation/index',
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       component: () => import('@/views/documentation/index'),
-  //       name: 'Documentation',
-  //       meta: { title: 'documentation', icon: 'documentation', noCache: true }
-  //     }
-  //   ]
-  // },
+  {
+    path: '/404',
+    component: () => import('@/views/errorPage/404'),
+    hidden: true
+  },
 
   {
     path: '/login',
@@ -98,5 +81,5 @@ export default new Router({
 })
 
 export const asyncRouterMap = [
-
+  { path: '*', redirect: '/404', hidden: true }
 ]

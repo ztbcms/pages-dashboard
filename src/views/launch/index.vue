@@ -1,11 +1,12 @@
 <template>
   <div >
-    empty
+    Loading...
   </div>
 </template>
 
 <script>
-import Layout from '@/views/layout/Layout'
+import { parserMenuList } from '@/utils/ztbcms_utils'
+import request from '@/utils/request'
 
 export default {
   name: 'Launch',
@@ -16,31 +17,24 @@ export default {
     this.getMenuList()
   },
   methods: {
-    getMenuList() {
-      const menuList = [
-        {
-          path: '/content',
-          component: Layout,
-          name: 'content',
-          // redirect: "/content/contentManage",
-          alwaysShow: true,
-          meta: { title: '内容', icon: 'zip' },
-          children: [
-            {
-              path: 'contentManage',
-              component: Layout,
-              name: 'contentManage',
-              meta: { title: '内容管理', url: 'https://router.vuejs.org' }
-            },
-            {
-              path: 'sendManage',
-              component: Layout,
-              name: 'sendManage',
-              meta: { title: '发布管理', url: 'https://www.aliyun.com/' }
-            }
-          ]
+    getMenuList(){
+      request({
+        url: '/Admin/AdminApi/getMenuList',
+        method: 'get',
+        params: {}
+      }).then(response => {
+        const res = response.data
+        if(res.status) {
+          this.addMenus(res.data)
+        }else{
+          alert(res.msg)
         }
-      ]
+
+      })
+    },
+    addMenus(menus) {
+      const menuList = parserMenuList(menus)
+      console.log(menuList)
 
       this.$store.commit('SET_ROUTERS', menuList)
       this.$router.addRoutes(menuList)

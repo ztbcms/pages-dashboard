@@ -2,25 +2,29 @@
   <div class="navbar">
     <hamburger :toggle-click="toggleSideBar" :is-active="sidebar.opened" class="hamburger-container"/>
 
-    <span>XX管理系统</span>
+    <!--<span>XX管理系统</span>    -->
+    <breadcrumb class="breadcrumb-container"/>
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
         <error-log class="errLog-container right-menu-item"/>
 
-        <el-tooltip :content="$t('navbar.screenfull')" effect="dark" placement="bottom">
-          <screenfull class="screenfull right-menu-item"/>
-        </el-tooltip>
+        <!--全屏操作-->
+        <!--<el-tooltip :content="$t('navbar.screenfull')" effect="dark" placement="bottom">-->
+          <!--<screenfull class="screenfull right-menu-item"/>-->
+        <!--</el-tooltip>-->
 
-        <el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">
-          <size-select class="international right-menu-item"/>
-        </el-tooltip>
+        <!--布局大小-->
+        <!--<el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">-->
+          <!--<size-select class="international right-menu-item"/>-->
+        <!--</el-tooltip>-->
 
-        <lang-select class="international right-menu-item"/>
+        <!--语言选择-->
+        <!--<lang-select class="international right-menu-item"/>-->
 
-        <el-tooltip :content="$t('navbar.theme')" effect="dark" placement="bottom">
-          <theme-picker class="theme-switch right-menu-item"/>
-        </el-tooltip>
+        <!--<el-tooltip :content="$t('navbar.theme')" effect="dark" placement="bottom">-->
+          <!--<theme-picker class="theme-switch right-menu-item"/>-->
+        <!--</el-tooltip>-->
       </template>
 
       <el-dropdown class="avatar-container right-menu-item" trigger="click">
@@ -31,7 +35,8 @@
         <el-dropdown-menu slot="dropdown">
           <router-link to="/">
             <el-dropdown-item>
-              {{ $t('navbar.dashboard') }}
+              华南客服|15088132354
+              <i class="el-icon-arrow-right"></i>
             </el-dropdown-item>
           </router-link>
           <a target="_blank" href="https://github.com/PanJiaChen/vue-element-admin/">
@@ -39,6 +44,15 @@
               {{ $t('navbar.github') }}
             </el-dropdown-item>
           </a>
+
+          <el-dropdown-item >
+            <span style="display:block;" @click="goToGuide('内容管理', '/content/contentManage')">内容管理</span>
+          </el-dropdown-item>
+
+          <el-dropdown-item >
+            <span style="display:block;" @click="goToGuide('会员编辑', '/home')">会员编辑</span>
+          </el-dropdown-item>
+
           <el-dropdown-item divided>
             <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
           </el-dropdown-item>
@@ -84,6 +98,10 @@ export default {
       this.$store.dispatch('LogOut').then(() => {
         location.reload()// In order to re-instantiate the vue-router object to avoid bugs
       })
+    },
+    goToGuide(title, url) {
+      let now = Date.now()+'xx'
+      this.openNewFrame(title+now, url+now, 'http://baidu.com')
     }
   }
 }
