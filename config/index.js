@@ -60,7 +60,7 @@ module.exports = {
      * then assetsPublicPath should be set to "/bar/".
      * In most cases please use '/' !!!
      */
-    assetsPublicPath: '/',
+    assetsPublicPath: '/statics/admin/pages/dashboard/',//根据ztbcms目录
 
     /**
      * Source Maps
