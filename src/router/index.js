@@ -35,15 +35,6 @@ export const constantRouterMap = [
   {
     path: '',
     component: Lanuch
-    // redirect: 'dashboard',
-    // children: [
-    //   {
-    //     path: 'dashboard',
-    //     component: () => import('@/views/dashboard/index'),
-    //     name: 'Dashboard',
-    //     meta: { title: 'dashboard', icon: 'dashboard', noCache: true }
-    //   }
-    // ]
   },
   {
     path: '/redirect',
@@ -70,8 +61,8 @@ export const constantRouterMap = [
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true
-  }
-
+  },
+  { path: '*', redirect: '/404', hidden: true }
 ]
 
 export default new Router({
