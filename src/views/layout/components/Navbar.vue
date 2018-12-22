@@ -11,46 +11,35 @@
 
         <!--全屏操作-->
         <!--<el-tooltip :content="$t('navbar.screenfull')" effect="dark" placement="bottom">-->
-          <!--<screenfull class="screenfull right-menu-item"/>-->
+        <!--<screenfull class="screenfull right-menu-item"/>-->
         <!--</el-tooltip>-->
 
         <!--布局大小-->
         <!--<el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">-->
-          <!--<size-select class="international right-menu-item"/>-->
+        <!--<size-select class="international right-menu-item"/>-->
         <!--</el-tooltip>-->
 
         <!--语言选择-->
         <!--<lang-select class="international right-menu-item"/>-->
 
         <!--<el-tooltip :content="$t('navbar.theme')" effect="dark" placement="bottom">-->
-          <!--<theme-picker class="theme-switch right-menu-item"/>-->
+        <!--<theme-picker class="theme-switch right-menu-item"/>-->
         <!--</el-tooltip>-->
       </template>
 
       <el-dropdown class="avatar-container right-menu-item" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <template v-if="avatar">
+            <img :src="avatar" class="user-avatar">
+          </template>
+          <template v-else>
+            <img src="@/assets/navbar/manager.png" class="user-avatar">
+          </template>
           <i class="el-icon-caret-bottom"/>
         </div>
         <el-dropdown-menu slot="dropdown">
-          <router-link to="/">
-            <el-dropdown-item>
-              华南客服|15088132354
-              <i class="el-icon-arrow-right"></i>
-            </el-dropdown-item>
-          </router-link>
-          <a target="_blank" href="https://github.com/PanJiaChen/vue-element-admin/">
-            <el-dropdown-item>
-              {{ $t('navbar.github') }}
-            </el-dropdown-item>
-          </a>
-
-          <el-dropdown-item >
-            <span style="display:block;" @click="goToGuide('内容管理', '/content/contentManage')">内容管理</span>
-          </el-dropdown-item>
-
-          <el-dropdown-item >
-            <span style="display:block;" @click="goToGuide('会员编辑', '/home')">会员编辑</span>
+          <el-dropdown-item>
+            {{ name }}
           </el-dropdown-item>
 
           <el-dropdown-item divided>
@@ -98,10 +87,6 @@ export default {
       this.$store.dispatch('LogOut').then(() => {
         location.reload()// In order to re-instantiate the vue-router object to avoid bugs
       })
-    },
-    goToGuide(title, url) {
-      let now = Date.now()+'xx'
-      this.openNewFrame(title+now, url+now, 'http://baidu.com')
     }
   }
 }

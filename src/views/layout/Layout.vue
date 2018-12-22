@@ -13,6 +13,8 @@
 <script>
 import { Navbar, Sidebar, AppMain, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
+import request from '@/utils/request'
+import { Message } from 'element-ui'
 
 export default {
   name: 'Layout',
@@ -39,11 +41,31 @@ export default {
       }
     }
   },
-  mounted() {},
+  mounted() {
+    this.getAdminUserInfo()
+  },
   methods: {
     handleClickOutside() {
       this.$store.dispatch('closeSideBar', { withoutAnimation: false })
-    }
+    },
+    // 获取管理员信息
+    getAdminUserInfo() {
+      request({
+        url: '/Admin/AdminApi/getAdminUserInfo',
+        method: 'get',
+        params: {}
+      }).then(response => {
+        const res = response.data
+        console.log(res)
+        if (res.status) {
+          this.$store.commit('SET_ROLES', res.data.role_id)
+          this.$store.commit('SET_NAME', res.data.nickname)
+          this.$store.commit('SET_AVATAR', res.data.avatar)
+        } else {
+          Message.error(res.msg)
+        }
+      })
+    },
   }
 }
 </script>

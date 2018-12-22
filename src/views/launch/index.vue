@@ -7,6 +7,7 @@
 <script>
 import { parserMenuList } from '@/utils/ztbcms_utils'
 import request from '@/utils/request'
+import { Message } from 'element-ui'
 
 export default {
   name: 'Launch',
@@ -17,6 +18,7 @@ export default {
     this.getMenuList()
   },
   methods: {
+    // 获取菜单
     getMenuList() {
       request({
         url: '/Admin/AdminApi/getMenuList',
@@ -27,10 +29,11 @@ export default {
         if (res.status) {
           this.addMenus(res.data)
         } else {
-          alert(res.msg)
+          Message.error(res.msg)
         }
       })
     },
+    // 添加菜单
     addMenus(menus) {
       const menuList = parserMenuList(menus)
 
@@ -51,6 +54,7 @@ export default {
         }
       }
     }
+
   }
 }
 </script>
