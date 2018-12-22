@@ -17,24 +17,22 @@ export default {
     this.getMenuList()
   },
   methods: {
-    getMenuList(){
+    getMenuList() {
       request({
         url: '/Admin/AdminApi/getMenuList',
         method: 'get',
         params: {}
       }).then(response => {
         const res = response.data
-        if(res.status) {
+        if (res.status) {
           this.addMenus(res.data)
-        }else{
+        } else {
           alert(res.msg)
         }
-
       })
     },
     addMenus(menus) {
       const menuList = parserMenuList(menus)
-      console.log(menuList)
 
       this.$store.commit('SET_ROUTERS', menuList)
       this.$router.addRoutes(menuList)
