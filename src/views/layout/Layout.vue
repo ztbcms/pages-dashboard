@@ -56,7 +56,6 @@ export default {
         params: {}
       }).then(response => {
         const res = response.data
-        console.log(res)
         if (res.status) {
           this.$store.commit('SET_ROLES', res.data.role_id)
           this.$store.commit('SET_NAME', res.data.nickname)
@@ -65,7 +64,7 @@ export default {
           Message.error(res.msg)
         }
       })
-    },
+    }
   }
 }
 </script>

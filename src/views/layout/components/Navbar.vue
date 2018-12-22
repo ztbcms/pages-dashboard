@@ -43,7 +43,7 @@
           </el-dropdown-item>
 
           <el-dropdown-item divided>
-            <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
+            <span style="display:block;" @click="logout">注销</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -60,6 +60,8 @@ import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import LangSelect from '@/components/LangSelect'
 import ThemePicker from '@/components/ThemePicker'
+import request from '@/utils/request'
+import { Message } from 'element-ui'
 
 export default {
   components: {
@@ -84,8 +86,20 @@ export default {
       this.$store.dispatch('toggleSideBar')
     },
     logout() {
-      this.$store.dispatch('LogOut').then(() => {
-        location.reload()// In order to re-instantiate the vue-router object to avoid bugs
+      request({
+        url: '/Admin/AdminApi/logout',
+        method: 'get',
+        params: {}
+      }).then(response => {
+        const res = response.data
+        if (res.status) {
+          Message.success(res.msg)
+          setTimeout(() => {
+            window.location.replace(res.data.redirect)
+          }, 700)
+        } else {
+          Message.error(res.msg)
+        }
       })
     }
   }
