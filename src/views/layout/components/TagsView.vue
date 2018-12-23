@@ -27,6 +27,7 @@
 <script>
 import ScrollPane from '@/components/ScrollPane'
 import { generateTitle } from '@/utils/i18n'
+import NProgress from 'nprogress' // progress bar
 
 export default {
   components: { ScrollPane },
@@ -89,14 +90,16 @@ export default {
       })
     },
     refreshSelectedTag(view) {
-      this.$store.dispatch('delCachedView', view).then(() => {
-        const { fullPath } = view
-        this.$nextTick(() => {
-          this.$router.replace({
-            path: '/redirect' + fullPath
-          })
-        })
+      NProgress.start()
+      const event = new CustomEvent('adminRefreshFrame', {
+        detail: {
+          refreshView: view
+        }
       })
+      window.parent.dispatchEvent(event)
+      setTimeout(() => {
+        NProgress.done()
+      }, 500)
     },
     closeSelectedTag(view) {
       this.$store.dispatch('delView', view).then(({ visitedViews }) => {

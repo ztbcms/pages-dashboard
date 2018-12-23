@@ -42,9 +42,22 @@ export default {
     }
   },
   mounted() {
+    this.registerEvent()
+
     this.getAdminUserInfo()
   },
+  beforeDestroy() {
+    this.unregisterEvent()
+  },
   methods: {
+    registerEvent() {
+      window.addEventListener('adminOpenNewFrame', this.handleEvent_adminOpenNewFrame.bind(this))
+      window.addEventListener('adminRefreshFrame', this.handleEvent_adminRefreshFrame.bind(this))
+    },
+    unregisterEvent() {
+      window.removeEventListener('adminOpenNewFrame', this.handleEvent_adminOpenNewFrame.bind(this))
+      window.removeEventListener('adminRefreshFrame', this.handleEvent_adminRefreshFrame.bind(this))
+    },
     handleClickOutside() {
       this.$store.dispatch('closeSideBar', { withoutAnimation: false })
     },
@@ -64,7 +77,24 @@ export default {
           Message.error(res.msg)
         }
       })
+    },
+    // 打开新窗口
+    handleEvent_adminOpenNewFrame(event) {
+      const title = event.detail.title || ''
+      const router_path = event.detail.router_path || ''
+      const url = event.detail.url || ''
+      this.openNewFrame(title, router_path, url)
+    },
+    // 刷新窗口
+    handleEvent_adminRefreshFrame(event) {
+      const refreshView = event.detail.refreshView
+      console.log('handleEvent_adminRefreshFrame',refreshView)
+      if (refreshView) {
+        document.getElementById(refreshView.name).src = refreshView.meta.url
+      }
+
     }
+
   }
 }
 </script>

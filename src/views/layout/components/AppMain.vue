@@ -2,7 +2,7 @@
   <section class="app-main">
     <!-- <iframe :src="currentRouter" style="width: 100%;height: 100%;"></iframe> -->
     <template v-for="view in visitedViews">
-      <iframe :class="{'hidden': view.name != currentRouter}" :key="view.name" :src="view.meta.url" class="iframe"/>
+      <iframe :id="view.name" :class="{'hidden': view.name != currentRouter}" :key="view.name" :src="view.meta.url" class="iframe"/>
     </template>
   </section>
 </template>
