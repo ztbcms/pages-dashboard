@@ -4,9 +4,9 @@ export default {
   methods: {
     /**
      * 打开新窗口
-     * @param title
-     * @param router_path
-     * @param url
+     * @param title 标题
+     * @param router_path 路由(相对路径)
+     * @param url 对应的URL
      */
     openNewFrame(title, router_path, url) {
       const router = {
