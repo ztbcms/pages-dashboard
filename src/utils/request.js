@@ -38,7 +38,15 @@ service.interceptors.response.use(
   response => {
     const res = response.data
     if (res.code === 401) {
-      window.location.replace(res.data.user_auth_gateway)
+      Message({
+        message: res.msg,
+        type: 'error',
+        duration: 2 * 1000
+      })
+      if (res.data.user_auth_gateway) {
+        window.location.replace(res.data.user_auth_gateway)
+      }
+
       return Promise.reject('error')
     } else {
       return response
