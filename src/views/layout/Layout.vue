@@ -43,7 +43,6 @@ export default {
   },
   mounted() {
     this.registerEvent()
-
     this.getAdminUserInfo()
   },
   beforeDestroy() {
@@ -70,7 +69,7 @@ export default {
       }).then(response => {
         const res = response.data
         if (res.status) {
-          this.$store.commit('SET_ROLES', res.data.role_id)
+          this.$store.commit('SET_ROLES', [res.data.role_id])
           this.$store.commit('SET_NAME', res.data.nickname)
           this.$store.commit('SET_AVATAR', res.data.avatar)
         } else {

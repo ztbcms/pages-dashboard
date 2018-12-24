@@ -41,6 +41,9 @@
           <el-dropdown-item>
             {{ name }}
           </el-dropdown-item>
+          <el-dropdown-item v-if="hasPermission_cleanCache" >
+            <span style="display:block;" @click="openCleanCache">清理缓存</span>
+          </el-dropdown-item>
 
           <el-dropdown-item divided>
             <span style="display:block;" @click="logout">注销</span>
@@ -62,6 +65,7 @@ import LangSelect from '@/components/LangSelect'
 import ThemePicker from '@/components/ThemePicker'
 import request from '@/utils/request'
 import { Message } from 'element-ui'
+import { getWebAppBaseURL } from '@/utils/ztbcms_utils'
 
 export default {
   components: {
@@ -79,7 +83,10 @@ export default {
       'name',
       'avatar',
       'device'
-    ])
+    ]),
+    hasPermission_cleanCache() {
+      return this.hasRolePermission('/Admin/Index/cache')
+    }
   },
   methods: {
     toggleSideBar() {
@@ -101,6 +108,9 @@ export default {
           Message.error(res.msg)
         }
       })
+    },
+    openCleanCache() {
+      this.openNewFrame('缓存更新', '/Admin/Index/cache', getWebAppBaseURL() + '/Admin/Index/cache')
     }
   }
 }

@@ -35,3 +35,12 @@ export function parserMenuList(menuList, level = 1) {
 
   return result
 }
+
+/**
+ * 获取应用运行时的Base URL
+ * @returns {string}
+ */
+export function getWebAppBaseURL() {
+  return window.location.protocol + '//' + window.location.host
+}
+

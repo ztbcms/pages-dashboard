@@ -19,13 +19,14 @@ export default {
     // 获取菜单
     getMenuList() {
       request({
-        url: '/Admin/AdminApi/getMenuList',
+        url: '/Admin/AdminApi/getPermissionInfo',
         method: 'get',
         params: {}
       }).then(response => {
         const res = response.data
         if (res.status) {
-          this.addMenus(res.data)
+          this.addRoleAccessList(res.data.roleAccessList)
+          this.addMenus(res.data.menuList)
         } else {
           Message.error(res.msg)
         }
@@ -51,6 +52,9 @@ export default {
           this.$router.push({ name: menuList[0]['name'] })
         }
       }
+    },
+    addRoleAccessList(roleAccessList) {
+      this.$store.commit('SET_ROLE_ACCESS_LIST', roleAccessList)
     }
 
   }

@@ -46,3 +46,9 @@ class AdminApiBaseController extends CMS
 - Layout/index.vue 后台框架页(整个后台页的交互)
 - Launch/index.vue 框架启动页(用来获取菜单)
 
+
+### 页面权限：功能按权限显示
+
+`src/utils/mixin.js`中的`hasRolePermission()`用于检测当前登录用户是否有权限访问路由。请参考`Navbar.vue`中的『缓存清理』功能实现。
+
+![图片](https://dn-coding-net-production-pp.codehub.cn/988b5094-4b3b-4869-9d29-c7635bcd5386.png)
