@@ -15,6 +15,7 @@ import { Navbar, Sidebar, AppMain, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 import request from '@/utils/request'
 import { Message } from 'element-ui'
+import md5 from 'md5'
 
 export default {
   name: 'Layout',
@@ -52,8 +53,17 @@ export default {
     registerEvent() {
       window.addEventListener('adminOpenNewFrame', this.handleEvent_adminOpenNewFrame.bind(this))
       window.addEventListener('adminRefreshFrame', this.handleEvent_adminRefreshFrame.bind(this))
+
+      window.__adminOpenNewFrame = (config) => {
+        const title = config.title || ''
+        const router_path = '/' + md5(config.url)
+        const url = config.url || ''
+        this.openNewFrame(title, router_path, url)
+      }
     },
     unregisterEvent() {
+      window.__adminOpenNewFrame = null
+
       window.removeEventListener('adminOpenNewFrame', this.handleEvent_adminOpenNewFrame.bind(this))
       window.removeEventListener('adminRefreshFrame', this.handleEvent_adminRefreshFrame.bind(this))
     },
@@ -87,7 +97,7 @@ export default {
     // 刷新窗口
     handleEvent_adminRefreshFrame(event) {
       const refreshView = event.detail.refreshView
-      console.log('handleEvent_adminRefreshFrame',refreshView)
+      console.log('handleEvent_adminRefreshFrame', refreshView)
       if (refreshView) {
         document.getElementById(refreshView.name).src = refreshView.meta.url
       }

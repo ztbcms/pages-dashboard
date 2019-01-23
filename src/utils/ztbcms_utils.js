@@ -1,4 +1,5 @@
 import Layout from '@/views/layout/Layout'
+import { deepClone } from './index'
 
 /**
  * 解析菜单
@@ -28,11 +29,21 @@ export function parserMenuList(menuList, level = 1) {
       if (menu.items && menu.items.length > 0) {
         item.children = parserMenuList(menu.items, level + 1)
         item.redirect = item.children[0].path
+      } else {
+        if (level === 1) {
+          item.children.push(deepClone(item))
+          item.path = item.name + '_top'
+          // item.name = item.path
+          // item.alwaysShow = false
+          // delete item.name
+          item.redirect = item.children[0].path
+        }
       }
+
       result.push(item)
     })
   }
-
+  
   return result
 }
 

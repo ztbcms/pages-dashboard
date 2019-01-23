@@ -52,3 +52,49 @@ class AdminApiBaseController extends CMS
 `src/utils/mixin.js`中的`hasRolePermission()`用于检测当前登录用户是否有权限访问路由。请参考`Navbar.vue`中的『缓存清理』功能实现。
 
 ![图片](https://dn-coding-net-production-pp.codehub.cn/988b5094-4b3b-4869-9d29-c7635bcd5386.png)
+
+
+### 页面操作
+
+1.打开新窗口
+```js
+//方法1. 封装后再调用
+window.openNewIframe = function (title, url) {
+    if (parent.window != window) {
+        parent.window.__adminOpenNewFrame({
+            title: title,
+            url: url
+        })
+    } else {
+        window.location.href = url;
+    }
+}.bind(this)
+
+//调用
+window.openNewIframe('标题','http://baidu.com');
+
+
+//方法2.直接调用(兼容性差)
+
+parent.window.__adminOpenNewFrame({
+    title: '标题',
+    url: 'http://baidu.com'
+})
+```
+
+2.刷新指定页面（一般很少用）
+
+```
+const event = new CustomEvent('adminRefreshFrame', {
+  detail: {
+    refreshView: {
+      name:'路由的name',
+      meta:{
+        url: "/index.php?g=Admin&m=Adminmanage&a=chanpass&menuid=6"
+      },
+    }
+  }
+})
+window.parent.dispatchEvent(event)
+```
+
