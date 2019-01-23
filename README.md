@@ -98,3 +98,16 @@ const event = new CustomEvent('adminRefreshFrame', {
 window.parent.dispatchEvent(event)
 ```
 
+3. 图标配置
+
+
+到iconfont.cn选取icon,用的是svg
+![图片](https://dn-coding-net-production-pp.codehub.cn/c02721e8-2d56-4407-8e59-8101e6f3fe1b.png)
+
+在dashborad.php 引入js
+![图片](https://dn-coding-net-production-pp.codehub.cn/8b6dea28-655d-4dc0-9525-848ab9452635.png)
+
+设置菜单的icon
+![图片](https://dn-coding-net-production-pp.codehub.cn/f856614b-fcbe-40f6-9f47-b332c34852dd.png)
+
+
