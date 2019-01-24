@@ -81,7 +81,7 @@ parent.window.__adminOpenNewFrame({
     url: 'http://baidu.com'
 })
 
-//方法3 底层实现方法
+//方法3 底层实现方法,使用事件触发
 const event = new CustomEvent('adminOpenNewFrame', {
   detail: {
     title: '启动父窗口1', 
