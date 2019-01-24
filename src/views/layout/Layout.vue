@@ -58,7 +58,15 @@ export default {
         const title = config.title || ''
         const router_path = '/' + md5(config.url)
         const url = config.url || ''
-        this.openNewFrame(title, router_path, url)
+
+        const event = new CustomEvent('adminOpenNewFrame', {
+          detail: {
+            title: title,
+            router_path: router_path,
+            url: url
+          }
+        })
+        window.parent.dispatchEvent(event)
       }
     },
     unregisterEvent() {

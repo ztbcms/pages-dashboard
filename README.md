@@ -80,6 +80,16 @@ parent.window.__adminOpenNewFrame({
     title: '标题',
     url: 'http://baidu.com'
 })
+
+//方法3 底层实现方法
+const event = new CustomEvent('adminOpenNewFrame', {
+  detail: {
+    title: '启动父窗口1', 
+    router_path: '/a/b/c', 
+    url: 'http://baidu.com'
+  }
+})
+window.parent.dispatchEvent(event)
 ```
 
 2.刷新指定页面（一般很少用）
