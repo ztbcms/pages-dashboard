@@ -23,7 +23,7 @@ export function parserMenuList(menuList, level = 1) {
           url: menu.url,
           level: level
         },
-        children: []
+        children: null // 必须为null,如果[] 他会变成一个数组的监控数组对象，如果是空的话就不会了
       }
 
       if (menu.items && menu.items.length > 0) {
@@ -31,11 +31,12 @@ export function parserMenuList(menuList, level = 1) {
         item.redirect = item.children[0].path
       } else {
         if (level === 1) {
-          item.children.push(deepClone(item))
+          const cloneItem = deepClone(item)
+          item.children = []
+          item.children.push(cloneItem)
           item.path = item.name + '_top'
-          // item.name = item.path
-          // item.alwaysShow = false
-          // delete item.name
+          item.name = item.path
+          item.alwaysShow = false
           item.redirect = item.children[0].path
         }
       }
@@ -43,7 +44,7 @@ export function parserMenuList(menuList, level = 1) {
       result.push(item)
     })
   }
-  
+
   return result
 }
 
