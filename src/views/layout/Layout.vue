@@ -90,6 +90,7 @@ export default {
           this.$store.commit('SET_ROLES', [res.data.role_id])
           this.$store.commit('SET_NAME', res.data.nickname)
           this.$store.commit('SET_AVATAR', res.data.avatar)
+          this.$store.commit('SET_LOGIN_USER_INFO', res.data)
         } else {
           Message.error(res.msg)
         }

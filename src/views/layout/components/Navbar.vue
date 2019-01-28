@@ -29,18 +29,15 @@
 
       <el-dropdown class="avatar-container right-menu-item" trigger="click">
         <div class="avatar-wrapper">
-          <template v-if="avatar">
-            <img :src="avatar" class="user-avatar">
+          <template v-if="loginUserInfo && loginUserInfo.role_name && loginUserInfo.username">
+            {{ loginUserInfo.role_name }}({{ loginUserInfo.username }})
           </template>
           <template v-else>
-            <img src="@/assets/navbar/manager.png" class="user-avatar">
+            加载中
           </template>
           <i class="el-icon-caret-bottom"/>
         </div>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>
-            {{ name }}
-          </el-dropdown-item>
           <el-dropdown-item v-if="hasPermission_cleanCache" >
             <span style="display:block;" @click="openCleanCache">清理缓存</span>
           </el-dropdown-item>
@@ -82,11 +79,15 @@ export default {
       'sidebar',
       'name',
       'avatar',
-      'device'
+      'device',
+      'loginUserInfo'
     ]),
     hasPermission_cleanCache() {
       return this.hasRolePermission('/Admin/Index/cache')
     }
+  },
+  mounted(){
+    console.log(this.loginUserInfo)
   },
   methods: {
     toggleSideBar() {

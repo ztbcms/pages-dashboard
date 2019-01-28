@@ -13,6 +13,22 @@ const user = {
     roles: [],
     setting: {
       articlePlatform: []
+    },
+    loginUserInfo: {
+      avatar: '',
+      bind_account: '',
+      create_time: '',
+      email: '',
+      id: '',
+      info: '',
+      nickname: '',
+      phone: '',
+      remark: '',
+      role_id: '',
+      role_name: '',
+      status: '',
+      update_time: '',
+      username: ''
     }
   },
 
@@ -40,6 +56,9 @@ const user = {
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
+    },
+    SET_LOGIN_USER_INFO: (state, loginUserInfo) => {
+      state.loginUserInfo = loginUserInfo
     }
   },
 
