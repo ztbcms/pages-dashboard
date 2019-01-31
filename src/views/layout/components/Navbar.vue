@@ -42,7 +42,7 @@
             <span style="display:block;" @click="openCleanCache">清理缓存</span>
           </el-dropdown-item>
 
-          <el-dropdown-item divided>
+          <el-dropdown-item>
             <span style="display:block;" @click="logout">注销</span>
           </el-dropdown-item>
         </el-dropdown-menu>
