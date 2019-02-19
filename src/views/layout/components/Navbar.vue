@@ -158,7 +158,7 @@ export default {
       height: 50px;
       margin-right: 30px;
       .avatar-wrapper {
-        margin-top: 5px;
+        /*margin-top: 5px;*/
         position: relative;
         .user-avatar {
           cursor: pointer;
@@ -170,7 +170,7 @@ export default {
           cursor: pointer;
           position: absolute;
           right: -20px;
-          top: 25px;
+          top: 22px;
           font-size: 12px;
         }
       }
