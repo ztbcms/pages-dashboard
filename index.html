@@ -24,7 +24,7 @@
                     text-color="rgb(191, 203, 217)"
                     active-text-color="#409eff"
                     :collapse="isnavHid"
-                    :default-active	="defaultActive"
+                    :default-active	="tagData.defaultActive"
                 >
                     <div
                         v-for="(item, index) in navData"
@@ -83,7 +83,7 @@
                     ></i>
                     <el-breadcrumb separator="/">
                         <el-breadcrumb-item
-                            v-for="(item, index) in breadcrumb"
+                            v-for="(item, index) in tagData.breadcrumb"
                             :key="index"
                         >{{item}}</el-breadcrumb-item>
                     </el-breadcrumb>
@@ -127,7 +127,6 @@
                 isnavHid: false,
                 minHid: false,
                 windowSize: 1920,
-                defaultActive: '1Admin',
                 navData: data.data.menuList,
                 iframeUrl: 'http://sha.hb.ztbweb.cn/index.php?m=Main&menuid=1',
                 tags: [
@@ -163,7 +162,6 @@
                 },
                 tagClick (data, index) {
                     this.iframeUrl = data.url
-                    this.defaultActive = data.defaultActive
                 },
                 // tag删除事件
                 closeTag (data, index) {
@@ -209,9 +207,12 @@
                 }
             },
             computed: {
-                breadcrumb () {
+                tagData () {
                     var data = this.tags.find(item => item.url === this.iframeUrl)
-                    return data.breadcrumb
+                    return {
+                        breadcrumb: data.breadcrumb,
+                        defaultActive: data.defaultActive
+                    }
                 }
             },
             created () {
