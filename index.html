@@ -28,7 +28,7 @@
                 >
                     <div
                         v-for="(item, index) in navData"
-                        :key="index"
+                        :key="item.id"
                     >
                         <el-menu-item
                             v-if="item.items.length === 0"
@@ -43,7 +43,7 @@
                                 <i class="iconfont el-icon-location"></i>
                                 <span>{{item.name}}</span>
                             </template>
-                            <div v-for="(val, j) in item.items" :key="j">
+                            <div v-for="(val, j) in item.items" :key="val.id">
                                 <el-menu-item
                                     v-if="val.items.length === 0"
                                     :index="val.id"
@@ -57,7 +57,7 @@
                                     </template>
                                     <el-menu-item
                                         v-for="(sub, v) in val.items"
-                                        :key="index + '-' + j + '-' + v"
+                                        :key="sub.id"
                                         :index="sub.id"
                                         @click="goUrl([item.name, val.name, sub.name], sub)"
                                     >
