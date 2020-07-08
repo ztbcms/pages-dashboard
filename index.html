@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,231 +13,255 @@
     <!-- 导航数据 -->
     <script src="./data/data.js"></script>
 </head>
+
 <body>
-<div id="app">
-    <!-- 导航 -->
-    <div class="sidebar-container" :class="{hid : minHid}">
-        <el-row class="tac">
-            <el-col class="scroll-Y">
-                <el-menu
-                    default-active="2"
-                    class="el-menu-vertical-demo"
-                    text-color="rgb(191, 203, 217)"
-                    active-text-color="#409eff"
-                    :collapse="isnavHid"
-                    :default-active	="tagData.defaultActive"
-                >
-                    <div
-                        v-for="(item, index) in navData"
-                        :key="item.id"
-                    >
-                        <el-menu-item
-                            v-if="item.items.length === 0"
-                            :index="item.id"
-                            @click="goUrl([item.name], item)"
-                        >
-                            <i class="iconfont el-icon-location"></i>
-                            <span slot="title">{{item.name}}</span>
-                        </el-menu-item>
-                        <el-submenu v-else :index="item.id">
-                            <template slot="title">
+    <div id="app">
+        <!-- 导航 -->
+        <div class="sidebar-container" ref="nav" :class="{hid : minHid}">
+            <el-row class="tac">
+                <el-col class="scroll-Y">
+                    <el-menu default-active="2" class="el-menu-vertical-demo" text-color="rgb(191, 203, 217)" active-text-color="#409eff" :collapse="isnavHid" :default-active="tagData.defaultActive">
+                        <div v-for="(item, index) in navData" :key="item.id">
+                            <el-menu-item v-if="item.items.length === 0" :index="item.id" @click="goUrl([item.name], item)">
                                 <i class="iconfont el-icon-location"></i>
-                                <span>{{item.name}}</span>
-                            </template>
-                            <div v-for="(val, j) in item.items" :key="val.id">
-                                <el-menu-item
-                                    v-if="val.items.length === 0"
-                                    :index="val.id"
-                                    @click="goUrl([item.name, val.name], val)"
-                                >
-                                    <span slot="title">{{val.name}}</span>
-                                </el-menu-item>
-                                <el-submenu :index="val.id" v-else>
-                                    <template slot="title">
-                                        <span>{{val.name}}</span>
-                                    </template>
-                                    <el-menu-item
-                                        v-for="(sub, v) in val.items"
-                                        :key="sub.id"
-                                        :index="sub.id"
-                                        @click="goUrl([item.name, val.name, sub.name], sub)"
-                                    >
-                                        <span slot="title">{{sub.name}}</span>
+                                <span slot="title">{{item.name}}</span>
+                            </el-menu-item>
+                            <el-submenu v-else :index="item.id">
+                                <template slot="title">
+                                    <i class="iconfont el-icon-location"></i>
+                                    <span>{{item.name}}</span>
+                                </template>
+                                <div v-for="(val, j) in item.items" :key="val.id">
+                                    <el-menu-item v-if="val.items.length === 0" :index="val.id" @click="goUrl([item.name, val.name], val)">
+                                        <span slot="title">{{val.name}}</span>
                                     </el-menu-item>
-                                </el-submenu>
-                            </div>
-                        </el-submenu>
-                    </div>
-                </el-menu>
-            </el-col>
-        </el-row>
-    </div>
-    <!-- 内容 -->
-    <div class="centent" :class="{hid : !isnavHid}">
-        <div class="navbar">
-            <div class="left">
-                <div class="nav">
-                    <i
-                        class="el-icon-s-fold navicon"
-                        @click="navShow()"
-                        :class="{navShow : isnavHid}"
-                    ></i>
-                    <el-breadcrumb separator="/">
-                        <el-breadcrumb-item
-                            v-for="(item, index) in tagData.breadcrumb"
-                            :key="index"
-                        >{{item}}</el-breadcrumb-item>
-                    </el-breadcrumb>
-                </div>
-                <el-dropdown>
-                    <span class="el-dropdown-link">
-                      admin（超级管理员）<i class="el-icon-arrow-down el-icon--right"></i>
-                    </span>
-                    <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item>设置</el-dropdown-item>
-                      <el-dropdown-item>退出</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
-            </div>
-            <div class="tag" ref="tagScroll">
-                <div class="list" ref="tagList">
-                    <el-tag
-                        v-for="(item, index) in tags"
-                        :key="item.name"
-                        :ref="'tag-' + index"
-                        closable
-                        :disable-transitions="false"
-                        :type="item.url === iframeUrl ? '' : 'info'"
-                        @click="tagClick(item, index)"
-                        @close="closeTag(item, index)"
-                    >{{item.name}}</el-tag>
-                </div>
-            </div>
+                                    <el-submenu :index="val.id" v-else>
+                                        <template slot="title">
+                                            <span>{{val.name}}</span>
+                                        </template>
+                                        <el-menu-item v-for="(sub, v) in val.items" :key="sub.id" :index="sub.id" @click="goUrl([item.name, val.name, sub.name], sub)">
+                                            <span slot="title">{{sub.name}}</span>
+                                        </el-menu-item>
+                                    </el-submenu>
+                                </div>
+                            </el-submenu>
+                        </div>
+                    </el-menu>
+                </el-col>
+            </el-row>
         </div>
-        <section class="app-main">
-            <iframe :src="iframeUrl" frameborder="0" class="iframe"></iframe>
-        </section>
+        <!-- 内容 -->
+        <div class="centent" :class="{hid : !isnavHid}">
+            <div class="navbar">
+                <div class="left">
+                    <div class="nav">
+                        <i class="el-icon-s-fold navicon" @click="navShow()" :class="{navShow : isnavHid}"></i>
+                        <el-breadcrumb separator="/">
+                            <el-breadcrumb-item v-for="(item, index) in tagData.breadcrumb" :key="index">{{item}}
+                            </el-breadcrumb-item>
+                        </el-breadcrumb>
+                    </div>
+                    <el-dropdown>
+                        <span class="el-dropdown-link">
+                            admin（超级管理员）<i class="el-icon-arrow-down el-icon--right"></i>
+                        </span>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item>设置</el-dropdown-item>
+                            <el-dropdown-item>退出</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                </div>
+                <div class="tag" ref="tagScroll">
+                    <div class="list" ref="tagList">
+                        <div
+                            class="tag-item"
+                            :class="{show : item.url === iframeUrl}"
+                            v-for="(item, index) in tags"
+                            :key="item.name"
+                            :ref="'tag-' + index"
+                            @click="tagClick(item, index)"
+                            @contextmenu.prevent="openMenu($event, item)"
+                        >
+                            <div class="chebox"></div>
+                            {{item.name}}
+                            <i class="el-icon-close" @click.stop="closeTag(item, index)"></i>
+                        </div>
+                    </div>
+                </div>
+                <ul class="contextmenu" ref="contextmenu">
+                    <li @click="urlRefresh">刷新</li>
+                    <li @click="closeTag(temData)">关闭</li>
+                    <li @click="urlOther">关闭其他</li>
+                    <li @click="endAll">关闭所有</li>
+                </ul>
+            </div>
+            <section class="app-main">
+                <iframe :src="iframeUrl" frameborder="0" class="iframe" id="iframe" ref="iframe"></iframe>
+            </section>
+        </div>
+        <div class="mask" v-show="!minHid" @click="minHid = true"></div>
     </div>
-    <div class="mask" v-show="!minHid" @click="minHid = true"></div>
-</div>
 </body>
-    <script>
-        var app = new Vue({
-            el: '#app',
-            data: {
-                isnavHid: false,
-                minHid: false,
-                windowSize: 1920,
-                navData: data.data.menuList,
-                iframeUrl: 'http://sha.hb.ztbweb.cn/index.php?m=Main&menuid=1',
-                tags: [
-                    {name: '概括', url: 'http://sha.hb.ztbweb.cn/index.php?m=Main&menuid=1', breadcrumb: ['概括'], defaultActive: '1Admin'}
-                ]
-            },
-            methods: {
-                // url点击事件
-                goUrl (breadcrumb, data) {
-                    this.iframeUrl = data.url
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            isnavHid: false,
+            minHid: false,
+            windowSize: 1920,
+            navData: data.data.menuList,
+            iframeUrl: 'http://sha.hb.ztbweb.cn/index.php?m=Main&menuid=1',
+            tags: [{
+                name: '概括',
+                url: 'http://sha.hb.ztbweb.cn/index.php?m=Main&menuid=1',
+                breadcrumb: ['概括'],
+                defaultActive: '1Admin'
+            }],
+            temData: {}
+        },
+        methods: {
+            // url点击事件
+            goUrl(breadcrumb, data) {
+                this.iframeUrl = data.url
                     // 判断tags里面是否包含了当前点击的url
-                    const tagIndex = this.tags.findIndex(item => item.url === data.url)
-                    if (tagIndex === -1) {
-                        // 把点击的导航添加到tag
-                        this.tags.push({name: data.name, url: data.url, breadcrumb, defaultActive: data.id})
-                        setTimeout(() => {
+                const tagIndex = this.tags.findIndex(item => item.url === data.url)
+                if (tagIndex === -1) {
+                    // 把点击的导航添加到tag
+                    this.tags.push({
+                        name: data.name,
+                        url: data.url,
+                        breadcrumb,
+                        defaultActive: data.id
+                    })
+                    setTimeout(() => {
                             var tagList = this.$refs.tagList
                             this.setTagScroll(tagList.clientWidth)
                         }, 100)
                         // 判断是否来自小屏的手机点击
-                        if (this.windowSize <= 1024) {
-                            this.minHid = true
-                        }
-                    } else {
-                        // 获取tag当前位置的offsetLeft值，并且赋值到导航条上
-                        var tag = this.$refs['tag-' + tagIndex]
-                        if (tag) {
-                            tag = tag[0]
-                            var container = this.$refs.tagScroll
-                            container.scrollTo(tag.$el.offsetLeft - 10, 0)
-                        }
-                    }
-                },
-                tagClick (data, index) {
-                    this.iframeUrl = data.url
-                },
-                // tag删除事件
-                closeTag (data, index) {
-                    if (this.tags.length > 1) {
-                        this.tags.splice(index, 1)
-                        // 判断当前显示的页面是不是要被删除的页面
-                        if (this.iframeUrl === data.url) {
-                            this.tagClick(this.tags[this.tags.length - 1], index)
-                            // tag定位到最后
-                            var tagList = this.$refs.tagList
-                            this.setTagScroll(tagList.clientWidth)
-                        }
-                    }
-                },
-                setTagScroll (x) {
-                    var container = this.$refs.tagScroll
-                    container.scrollTo(x, 0)
-                },
-                // 弹出左侧导航icon,小屏和大屏区分操作
-                navShow () {
-                    if (this.minHid) {
-                        this.minHid = !this.minHid
-                    } else {
-                        this.isnavHid = !this.isnavHid
-                    }
-                },
-                // 判断当前浏览器的大小做左边导航的适配
-                onresize () {
-                    const clientWidth = document.documentElement.clientWidth
-                    if (clientWidth <= 1024) {
+                    if (this.windowSize <= 1024) {
                         this.minHid = true
-                        this.isnavHid = false
-                        this.windowSize = 1024
-                    } else if (clientWidth <= 1200) {
-                        this.minHid = false
-                        this.isnavHid = true
-                        this.windowSize = 1200
-                    } else {
-                        this.isnavHid = false
-                        this.minHid = false
-                        this.windowSize = 1920
+                    }
+                } else {
+                    // 获取tag当前位置的offsetLeft值，并且赋值到导航条上
+                    var tag = this.$refs['tag-' + tagIndex]
+                    if (tag) {
+                        tag = tag[0]
+                        var container = this.$refs.tagScroll
+                        container.scrollTo(tag.$el.offsetLeft - 10, 0)
                     }
                 }
             },
-            computed: {
-                tagData () {
-                    var data = this.tags.find(item => item.url === this.iframeUrl)
-                    return {
-                        breadcrumb: data.breadcrumb,
-                        defaultActive: data.defaultActive
+            tagClick(data, index) {
+                this.iframeUrl = data.url
+            },
+            // tag删除事件
+            closeTag(data) {
+                const index = this.tags.findIndex(item => item.url === data.url)
+                if (this.tags.length > 1) {
+                    this.tags.splice(index, 1)
+                        // 判断当前显示的页面是不是要被删除的页面
+                    if (this.iframeUrl === data.url) {
+                        this.tagClick(this.tags[this.tags.length - 1], index)
+                            // tag定位到最后
+                        var tagList = this.$refs.tagList
+                        this.setTagScroll(tagList.clientWidth)
                     }
                 }
             },
-            created () {
-                this.onresize()
+            setTagScroll(x) {
+                var container = this.$refs.tagScroll
+                container.scrollTo(x, 0)
             },
-            mounted () {
-                window.onresize = () => {
+            // 弹出左侧导航icon,小屏和大屏区分操作
+            navShow() {
+                if (this.minHid) {
+                    this.minHid = !this.minHid
+                } else {
+                    this.isnavHid = !this.isnavHid
+                }
+            },
+            // 判断当前浏览器的大小做左边导航的适配
+            onresize() {
+                const clientWidth = document.documentElement.clientWidth
+                if (clientWidth <= 1024) {
+                    this.minHid = true
+                    this.isnavHid = true
+                    this.windowSize = 1024
+                } else if (clientWidth <= 1200) {
+                    this.minHid = false
+                    this.isnavHid = true
+                    this.windowSize = 1200
+                } else {
+                    this.isnavHid = false
+                    this.minHid = false
+                    this.windowSize = 1920
+                }
+            },
+            // 右键弹出菜单
+            openMenu(e, data) {
+                this.temData = data
+                const navWidth = this.$refs.nav.offsetWidth
+                const pageX = e.pageX - navWidth
+                const pageY = e.pageY
+                this.$refs.contextmenu.style.display = 'block'
+                this.$refs.contextmenu.style.left = pageX + 'px'
+                this.$refs.contextmenu.style.top = pageY + 'px'
+            },
+            // 刷新
+            urlRefresh() {
+                const iframeUrl = this.iframeUrl
+                this.$refs.iframe.src = ''
+                setTimeout(el => {
+                    this.$refs.iframe.src = iframeUrl
+                }, 50)
+            },
+            // 关闭其他
+            urlOther() {
+                const index = this.tags.findIndex(item => item.url === this.temData.url)
+                this.iframeUrl = this.tags[index].url
+                this.tags = [this.tags[index]]
+            },
+            endAll() {
+                location.reload()
+            }
+        },
+        computed: {
+            tagData() {
+                var data = this.tags.find(item => item.url === this.iframeUrl) || {}
+                return {
+                    breadcrumb: data.breadcrumb,
+                    defaultActive: data.defaultActive
+                }
+            }
+        },
+        created() {
+            this.onresize()
+        },
+        mounted() {
+            window.onresize = () => {
                     this.onresize()
                 }
-                // tag的滚动事件
-                var container = this.$refs.tagScroll
-                let isFF = /FireFox/i.test(navigator.userAgent);
-                if (!isFF) //火狐外的浏览器
-                    container.addEventListener("mousewheel", function (e) {
-                        let v = -e.wheelDelta / 2;
-                        container.scrollLeft += v;
-                        e.preventDefault();
-                    }, false);
-                else //火狐
-                    container.addEventListener("DOMMouseScroll", function (e) {
-                        container.scrollLeft += e.detail * 80;
-                        e.preventDefault();
-                    }, false);
+            // 关闭菜单
+            document.onclick = () => {
+                    this.$refs.contextmenu.style.display = 'none'
+                }
+            // tag的滚动事件
+            var container = this.$refs.tagScroll
+            let isFF = /FireFox/i.test(navigator.userAgent)
+            if (!isFF) {
+                container.addEventListener("mousewheel", function(e) {
+                    let v = -e.wheelDelta / 2
+                    container.scrollLeft += v
+                    e.preventDefault()
+                }, false)
+            } else {
+                container.addEventListener("DOMMouseScroll", function(e) {
+                    container.scrollLeft += e.detail * 80
+                    e.preventDefault()
+                }, false)
             }
-        })
-    </script>
+        }
+    })
+</script>
+
 </html>
