@@ -15,7 +15,7 @@
 </head>
 
 <body>
-    <div id="app">
+    <div id="app" v-cloak>
         <!-- 导航 -->
         <div class="sidebar-container" ref="nav">
             <el-row class="tac">
@@ -129,10 +129,13 @@
         },
         methods: {
             // url点击事件
-            goUrl(breadcrumb, data) {
+            goUrl: function(breadcrumb, data) {
+                var that = this
                 this.iframeUrl = data.url
                     // 判断tags里面是否包含了当前点击的url
-                const tagIndex = this.tags.findIndex(item => item.url === data.url)
+                var tagIndex = this.tags.findIndex(function(item) {
+                    return item.url === data.url
+                })
                 if (tagIndex === -1) {
                     // 把点击的导航添加到tag
                     this.tags.push({
@@ -141,10 +144,10 @@
                         breadcrumb,
                         defaultActive: data.id
                     })
-                    setTimeout(() => {
-                            var tagList = this.$refs.tagList
-                            this.setTagScroll(tagList.clientWidth)
-                        }, 100)
+                    setTimeout(function() {
+                            var tagList = that.$refs.tagList
+                            that.setTagScroll(tagList.clientWidth)
+                    }, 100)
                         // 判断是否来自小屏的点击
                     if (this.windowSize <= 1024) {
                         this.minHid = true
@@ -160,12 +163,15 @@
                     }
                 }
             },
-            tagClick(data, index) {
+            // 点击tag
+            tagClick: function(data, index) {
                 this.iframeUrl = data.url
             },
             // tag删除事件
-            closeTag(data) {
-                const index = this.tags.findIndex(item => item.url === data.url)
+            closeTag: function(data) {
+                var index = this.tags.findIndex(function(item) { 
+                    return item.url === data.url
+                })
                 if (this.tags.length > 1) {
                     this.tags.splice(index, 1)
                         // 判断当前显示的页面是不是要被删除的页面
@@ -177,24 +183,25 @@
                     }
                 }
             },
-            setTagScroll(x) {
+            setTagScroll: function(x) {
                 var container = this.$refs.tagScroll
                 container.scrollTo(x, 0)
             },
             // 弹出左侧导航icon,小屏和大屏区分操作
-            navShow() {
+            navShow: function() {
                 this.isnavHid = !this.isnavHid
                 if (this.windowSize <= 1024) {
                     this.minHid = !this.minHid
                 }
             },
-            maskClick () {
+            // 点击左侧菜单弹出时的浮层，关闭左侧菜单
+            maskClick: function () {
                 this.minHid = !this.minHid
                 this.isnavHid = !this.isnavHid
             },
             // 判断当前浏览器的大小做左边导航的适配
-            onresize() {
-                const clientWidth = document.documentElement.clientWidth
+            onresize: function() {
+                var clientWidth = document.documentElement.clientWidth
                 if (clientWidth <= 1024) {
                     this.minHid = true
                     this.isnavHid = true
@@ -210,68 +217,78 @@
                 }
             },
             // 右键弹出菜单
-            openMenu(e, data) {
+            openMenu: function(e, data) {
                 this.temData = data
-                const navWidth = this.$refs.nav.offsetWidth
-                const pageX = e.pageX - navWidth
-                const pageY = e.pageY
+                var navWidth = this.$refs.nav.offsetWidth
+                var pageX = e.pageX - navWidth
+                var pageY = e.pageY
                 this.$refs.contextmenu.style.display = 'block'
                 this.$refs.contextmenu.style.left = pageX + 'px'
                 this.$refs.contextmenu.style.top = pageY + 'px'
             },
             // 刷新
-            urlRefresh() {
-                const iframeUrl = this.iframeUrl
+            urlRefresh: function() {
+                var that = this
+                var iframeUrl = this.iframeUrl
                 this.$refs.iframe.src = ''
-                setTimeout(el => {
-                    this.$refs.iframe.src = iframeUrl
+                setTimeout(function(el) {
+                    that.$refs.iframe.src = iframeUrl
                 }, 50)
             },
             // 关闭其他
-            urlOther() {
-                const index = this.tags.findIndex(item => item.url === this.temData.url)
+            urlOther: function() {
+                var index = this.tags.findIndex(function(item){
+                    return item.url === this.temData.url
+                })
                 this.iframeUrl = this.tags[index].url
                 this.tags = [this.tags[index]]
             },
-            endAll() {
+            endAll: function() {
                 location.reload()
+            },
+            init: function(){
+                var that = this
+                window.onresize = function() {
+                    that.onresize()
+                }
+                // 关闭tag上下文菜单
+                document.onclick = function(){
+                    that.$refs.contextmenu.style.display = 'none'
+                }
+                // tag的滚动事件
+                var container = this.$refs.tagScroll
+                let isFF = /FireFox/i.test(navigator.userAgent)
+                if (!isFF) {
+                    container.addEventListener("mousewheel", function(e) {
+                        let v = -e.wheelDelta / 2
+                        container.scrollLeft += v
+                        e.preventDefault()
+                    }, false)
+                } else {
+                    container.addEventListener("DOMMouseScroll", function(e) {
+                        container.scrollLeft += e.detail * 80
+                        e.preventDefault()
+                    }, false)
+                }
             }
         },
         computed: {
-            tagData() {
-                var data = this.tags.find(item => item.url === this.iframeUrl) || {}
+            tagData: function() {
+                var that = this
+                var data = this.tags.find(function(item) { 
+                    return item.url === that.iframeUrl
+                }) || {}
                 return {
                     breadcrumb: data.breadcrumb,
                     defaultActive: data.defaultActive
                 }
             }
         },
-        created() {
+        created: function() {
             this.onresize()
         },
-        mounted() {
-            window.onresize = () => {
-                    this.onresize()
-                }
-            // 关闭菜单
-            document.onclick = () => {
-                    this.$refs.contextmenu.style.display = 'none'
-                }
-            // tag的滚动事件
-            var container = this.$refs.tagScroll
-            let isFF = /FireFox/i.test(navigator.userAgent)
-            if (!isFF) {
-                container.addEventListener("mousewheel", function(e) {
-                    let v = -e.wheelDelta / 2
-                    container.scrollLeft += v
-                    e.preventDefault()
-                }, false)
-            } else {
-                container.addEventListener("DOMMouseScroll", function(e) {
-                    container.scrollLeft += e.detail * 80
-                    e.preventDefault()
-                }, false)
-            }
+        mounted: function() {
+            this.init()
         }
     })
 </script>
