@@ -102,6 +102,9 @@
 .el-menu--collapse {
     width: 36px;
 }
+.el-menu--collapse.hid{
+    width: 0px;
+}
 
 .el-menu--collapse .el-submenu__title>span,
 .el-menu--collapse .el-submenu__title .el-icon-arrow-right {
@@ -305,7 +308,7 @@
         display: block;
     }
     .mask {
-        z-index: 10;
+        z-index: 10 !important;
     }
 }
 

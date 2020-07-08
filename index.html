@@ -17,10 +17,18 @@
 <body>
     <div id="app">
         <!-- 导航 -->
-        <div class="sidebar-container" ref="nav" :class="{hid : minHid}">
+        <div class="sidebar-container" ref="nav">
             <el-row class="tac">
                 <el-col class="scroll-Y">
-                    <el-menu default-active="2" class="el-menu-vertical-demo" text-color="rgb(191, 203, 217)" active-text-color="#409eff" :collapse="isnavHid" :default-active="tagData.defaultActive">
+                    <el-menu
+                        default-active="2"
+                        class="el-menu-vertical-demo"
+                        text-color="rgb(191, 203, 217)"
+                        active-text-color="#409eff"
+                        :collapse="isnavHid"
+                        :default-active="tagData.defaultActive"
+                        :class="{hid : minHid}"
+                    >
                         <div v-for="(item, index) in navData" :key="item.id">
                             <el-menu-item v-if="item.items.length === 0" :index="item.id" @click="goUrl([item.name], item)">
                                 <i class="iconfont el-icon-location"></i>
@@ -99,7 +107,7 @@
                 <iframe :src="iframeUrl" frameborder="0" class="iframe" id="iframe" ref="iframe"></iframe>
             </section>
         </div>
-        <div class="mask" v-show="!minHid" @click="minHid = true"></div>
+        <div class="mask" v-show="!minHid" @click="maskClick"></div>
     </div>
 </body>
 <script>
@@ -137,9 +145,10 @@
                             var tagList = this.$refs.tagList
                             this.setTagScroll(tagList.clientWidth)
                         }, 100)
-                        // 判断是否来自小屏的手机点击
+                        // 判断是否来自小屏的点击
                     if (this.windowSize <= 1024) {
                         this.minHid = true
+                        this.isnavHid = true
                     }
                 } else {
                     // 获取tag当前位置的offsetLeft值，并且赋值到导航条上
@@ -174,11 +183,14 @@
             },
             // 弹出左侧导航icon,小屏和大屏区分操作
             navShow() {
-                if (this.minHid) {
+                this.isnavHid = !this.isnavHid
+                if (this.windowSize <= 1024) {
                     this.minHid = !this.minHid
-                } else {
-                    this.isnavHid = !this.isnavHid
                 }
+            },
+            maskClick () {
+                this.minHid = !this.minHid
+                this.isnavHid = !this.isnavHid
             },
             // 判断当前浏览器的大小做左边导航的适配
             onresize() {
@@ -193,7 +205,7 @@
                     this.windowSize = 1200
                 } else {
                     this.isnavHid = false
-                    this.minHid = false
+                    // this.minHid = false
                     this.windowSize = 1920
                 }
             },
