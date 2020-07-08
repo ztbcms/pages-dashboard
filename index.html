@@ -165,7 +165,11 @@
             },
             // 点击tag
             tagClick: function(data, index) {
-                this.iframeUrl = data.url
+                if(data){
+                    this.iframeUrl = data.url
+                } else {
+                    this.iframeUrl = ''
+                }
             },
             // tag删除事件
             closeTag: function(data) {
@@ -174,10 +178,10 @@
                 })
                 if (this.tags.length > 1) {
                     this.tags.splice(index, 1)
-                        // 判断当前显示的页面是不是要被删除的页面
+                    // 判断当前显示的页面是不是要被删除的页面
                     if (this.iframeUrl === data.url) {
-                        this.tagClick(this.tags[this.tags.length - 1], index)
-                            // tag定位到最后
+                        // tag定位到前一个
+                        this.tagClick(this.tags[index-1], index-1)
                         var tagList = this.$refs.tagList
                         this.setTagScroll(tagList.clientWidth)
                     }
@@ -243,9 +247,11 @@
                 this.iframeUrl = this.tags[index].url
                 this.tags = [this.tags[index]]
             },
+            // 关闭全部
             endAll: function() {
                 location.reload()
             },
+            // 初始化
             init: function(){
                 var that = this
                 window.onresize = function() {
