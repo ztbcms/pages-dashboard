@@ -15,7 +15,6 @@
     top: 0;
     bottom: 0;
     left: 0px;
-    z-index: 1001;
     overflow: hidden;
     background: rgb(48, 65, 86);
     z-index: 11;
@@ -103,6 +102,10 @@
     overflow: hidden;
 }
 
+.el-submenu__title .title{
+    color: rgb(191, 203, 217);
+}
+
 .el-menu--collapse {
     width: 36px;
 }
@@ -156,7 +159,8 @@
 }
 
 .iconfont {
-    /* width: 15px; */
+    font-size: 16px;
+    margin-right: 4px;
 }
 
 .navbar .left .nav {
