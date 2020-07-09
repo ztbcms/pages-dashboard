@@ -104,7 +104,7 @@
                 </ul>
             </div>
             <section class="app-main">
-                <iframe :src="iframeUrl" frameborder="0" class="iframe" id="iframe" ref="iframe"></iframe>
+                <iframe v-if="iframeUrl" :src="iframeUrl" frameborder="0" class="iframe" id="iframe" ref="iframe"></iframe>
             </section>
         </div>
         <div class="mask" v-show="!minHid" @click="maskClick"></div>
@@ -176,15 +176,17 @@
                 var index = this.tags.findIndex(function(item) { 
                     return item.url === data.url
                 })
-                if (this.tags.length > 1) {
-                    this.tags.splice(index, 1)
-                    // 判断当前显示的页面是不是要被删除的页面
-                    if (this.iframeUrl === data.url) {
-                        // tag定位到前一个
+                this.tags.splice(index, 1)
+                // 判断当前显示的页面是不是要被删除的页面
+                if (this.iframeUrl === data.url) {
+                    // tag定位到前一个
+                    if(index > 0){
                         this.tagClick(this.tags[index-1], index-1)
-                        var tagList = this.$refs.tagList
-                        this.setTagScroll(tagList.clientWidth)
+                    } else {
+                        this.iframeUrl = ''
                     }
+                    var tagList = this.$refs.tagList
+                    this.setTagScroll(tagList.clientWidth)
                 }
             },
             setTagScroll: function(x) {
@@ -241,15 +243,19 @@
             },
             // 关闭其他
             urlOther: function() {
+                var that = this
                 var index = this.tags.findIndex(function(item){
-                    return item.url === this.temData.url
+                    return item.url === that.temData.url
                 })
-                this.iframeUrl = this.tags[index].url
+                if(this.iframeUrl !== this.tags[index].url){
+                    this.iframeUrl = this.tags[index].url
+                }
                 this.tags = [this.tags[index]]
             },
             // 关闭全部
             endAll: function() {
-                location.reload()
+                this.iframeUrl = ''
+                this.tags = []
             },
             // 初始化
             init: function(){
