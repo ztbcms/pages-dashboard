@@ -89,24 +89,26 @@
                             v-for="(item, index) in tags"
                             :key="item.name"
                             :ref="'tag-' + index"
-                            @click="tagClick(item, index)"
-                            @contextmenu.prevent="openMenu($event, item)"
+                            @click="clickTag(item, index)"
+                            @contextmenu.prevent="openContextMenu($event, item, index)"
                         >
                             <div class="chebox"></div>
                             {{item.name}}
-                            <i class="el-icon-close" @click.stop="closeTag(item, index)"></i>
+                            <i class="el-icon-close" @click.stop="closeTag(index)"></i>
                         </div>
                     </div>
                 </div>
                 <ul class="contextmenu" ref="contextmenu">
-                    <li @click="urlRefresh">刷新</li>
-                    <li @click="closeTag(temData)">关闭</li>
-                    <li @click="urlOther">关闭其他</li>
-                    <li @click="endAll">关闭所有</li>
+                    <li @click="refreshTag(tempIndex)">刷新</li>
+                    <li @click="closeTag(tempIndex)">关闭本页</li>
+                    <li @click="closeOtherTag(tempIndex)">关闭其他</li>
+                    <li @click="closeAllTag">关闭所有</li>
                 </ul>
             </div>
             <section class="app-main">
-                <iframe v-if="iframeUrl" :src="iframeUrl" frameborder="0" class="iframe" id="iframe" ref="iframe"></iframe>
+                <template v-for="(url, index) in iframeUrls">
+                    <iframe :id="'iframe-'+index" :src="url" :key="url" frameborder="0" class="iframe" :style="{display: iframeUrl == url ? 'block': 'none'}"></iframe>
+                </template>
             </section>
         </div>
         <div class="mask" v-show="!minHid" @click="maskClick"></div>
@@ -127,14 +129,21 @@
                 breadcrumb: ['概括'],
                 defaultActive: '1Admin'
             }],
-            temData: {}
+            // 单线右键选中项
+            temData: {},
+            // 单线右键选中项序号
+            tempIndex: -1,
+            iframeUrls:[
+                'http://sha.hb.ztbweb.cn/index.php?m=Main&menuid=1'
+            ],
         },
         methods: {
             // url点击事件
             goUrl: function(breadcrumb, data) {
                 var that = this
                 this.iframeUrl = data.url
-                    // 判断tags里面是否包含了当前点击的url
+                this.iframeUrls.push(data.url)
+                // 判断tags里面是否包含了当前点击的url
                 var tagIndex = this.tags.findIndex(function(item) {
                     return item.url === data.url
                 })
@@ -147,10 +156,10 @@
                         defaultActive: data.id
                     })
                     setTimeout(function() {
-                            var tagList = that.$refs.tagList
-                            that.setTagScroll(tagList.clientWidth)
+                        var tagList = that.$refs.tagList
+                        that.setTagScroll(tagList.clientWidth)
                     }, 100)
-                        // 判断是否来自小屏的点击
+                    // 判断是否来自小屏的点击
                     if (this.windowSize <= 1024) {
                         this.minHid = true
                         this.isnavHid = true
@@ -166,24 +175,23 @@
                 }
             },
             // 点击tag
-            tagClick: function(data, index) {
+            clickTag: function(data, index) {
                 if(data){
                     this.iframeUrl = data.url
                 } else {
                     this.iframeUrl = ''
                 }
             },
-            // tag删除事件
-            closeTag: function(data) {
-                var index = this.tags.findIndex(function(item) { 
-                    return item.url === data.url
-                })
+            // tag关闭事件
+            closeTag: function(index) {
+                var tag = this.tags[index]
                 this.tags.splice(index, 1)
+                this.iframeUrls.splice(index, 1)
                 // 判断当前显示的页面是不是要被删除的页面
-                if (this.iframeUrl === data.url) {
+                if (this.iframeUrl === tag.url) {
                     // tag定位到前一个
                     if(index > 0){
-                        this.tagClick(this.tags[index-1], index-1)
+                        this.clickTag(this.tags[index-1], index-1)
                     } else {
                         this.iframeUrl = ''
                     }
@@ -198,7 +206,7 @@
             // 弹出左侧导航icon,小屏和大屏区分操作
             navShow: function() {
                 this.isnavHid = !this.isnavHid
-                if (this.windowSize <= 1024) {
+                if (this.windowSize <= 960) {
                     this.minHid = !this.minHid
                 }
             },
@@ -210,10 +218,10 @@
             // 判断当前浏览器的大小做左边导航的适配
             onresize: function() {
                 var clientWidth = document.documentElement.clientWidth
-                if (clientWidth <= 1024) {
+                if (clientWidth <= 960) {
                     this.minHid = true
                     this.isnavHid = true
-                    this.windowSize = 1024
+                    this.windowSize = 960
                 } else if (clientWidth <= 1200) {
                     this.minHid = false
                     this.isnavHid = true
@@ -225,8 +233,9 @@
                 }
             },
             // 右键弹出菜单
-            openMenu: function(e, data) {
+            openContextMenu: function(e, data, index) {
                 this.temData = data
+                this.tempIndex = index
                 var navWidth = this.$refs.nav.offsetWidth
                 var pageX = e.pageX - navWidth
                 var pageY = e.pageY
@@ -235,29 +244,27 @@
                 this.$refs.contextmenu.style.top = pageY + 'px'
             },
             // 刷新
-            urlRefresh: function() {
+            refreshTag: function(index = 0) {
                 var that = this
-                var iframeUrl = this.iframeUrl
-                this.$refs.iframe.src = ''
-                setTimeout(function(el) {
-                    that.$refs.iframe.src = iframeUrl
-                }, 50)
+                if(index >= 0){
+                    var iframeUrl = this.iframeUrls[index]
+                    document.getElementById('iframe-'+index).contentWindow.location.href = iframeUrl
+                }
             },
             // 关闭其他
-            urlOther: function() {
+            closeOtherTag: function(index = 0) {
                 var that = this
-                var index = this.tags.findIndex(function(item){
-                    return item.url === that.temData.url
-                })
                 if(this.iframeUrl !== this.tags[index].url){
                     this.iframeUrl = this.tags[index].url
                 }
                 this.tags = [this.tags[index]]
+                this.iframeUrls = [this.iframeUrls[index]]
             },
             // 关闭全部
-            endAll: function() {
+            closeAllTag: function() {
                 this.iframeUrl = ''
                 this.tags = []
+                this.iframeUrls = []
             },
             // 初始化
             init: function(){
