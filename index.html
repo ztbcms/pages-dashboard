@@ -146,9 +146,9 @@
                 var tagIndex = this.tags.findIndex(function(item) {
                     return item.url === data.url
                 })
-                this.iframeUrls.push(data.url)
                 if (tagIndex === -1) {
                     // 把点击的导航添加到tag
+                    this.iframeUrls.push(data.url)
                     this.tags.push({
                         name: data.name,
                         url: data.url,
