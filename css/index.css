@@ -284,7 +284,6 @@
 
 .contextmenu {
     display: none;
-    position: fixed;
     margin: 0;
     background: #fff;
     z-index: 100;
